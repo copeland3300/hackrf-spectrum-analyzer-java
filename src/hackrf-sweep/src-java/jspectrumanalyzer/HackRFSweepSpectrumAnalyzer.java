@@ -204,6 +204,8 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 	/**
 	 * Capture a GIF of the program for the GITHUB page
 	 */
+	private int										lowFreq								= 2400;
+	private int 									highFreq							= 2500;
 	private ScreenCapture							gifCap								= null;
 	private ArrayList<HackRFEventListener>			hRFlisteners							= new ArrayList<>();
 	private ArrayBlockingQueue<FFTBins>				hwProcessingQueue						= new ArrayBlockingQueue<>(
@@ -214,13 +216,13 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 
 	private ModelValueBoolean						parameterAntennaLNA   				= new ModelValueBoolean("Antenna LNA +14dB", false);
 	private ModelValueBoolean						parameterAntPower					= new ModelValueBoolean("Ant power", false);
-	private ModelValueInt							parameterFFTBinHz					= new ModelValueInt("FFT Bin [Hz]", 100000);
+	private ModelValueInt							parameterFFTBinHz					= new ModelValueInt("FFT Bin [Hz]", 2500);
 	private ModelValueBoolean						parameterFilterSpectrum				= new ModelValueBoolean("Filter", false);
-	private ModelValue<FrequencyRange>				parameterFrequency					= new ModelValue<>("Frequency range", new FrequencyRange(2400, 2500));
+	private ModelValue<FrequencyRange>				parameterFrequency					= new ModelValue<>("Frequency range", new FrequencyRange(lowFreq, highFreq));
 	private ModelValue<FrequencyAllocationTable>	parameterFrequencyAllocationTable	= new ModelValue<FrequencyAllocationTable>("Frequency allocation table", null);
 
 	private ModelValueInt							parameterGainLNA					= new ModelValueInt("LNA Gain",0, 8, 0, 40);
-	private ModelValueInt							parameterGainTotal					= new ModelValueInt("Gain [dB]", 40);
+	private ModelValueInt							parameterGainTotal					= new ModelValueInt("Gain [dB]", 60);
 	private ModelValueInt							parameterGainVGA					= new ModelValueInt("VGA Gain", 0, 2, 0, 60);
 	private ModelValueBoolean						parameterIsCapturingPaused			= new ModelValueBoolean("Capturing paused", false);
 
@@ -228,9 +230,9 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 	private ModelValueInt							parameterPeakFallRateSecs			= new ModelValueInt("Peak fall rate", 30);
 	private ModelValueBoolean						parameterPersistentDisplay			= new ModelValueBoolean("Persistent display", false);
 
-	private ModelValueInt							parameterSamples					= new ModelValueInt("Samples", 8192);
+	private ModelValueInt							parameterSamples					= new ModelValueInt("Samples", 131072);
 
-	private ModelValueBoolean						parameterShowPeaks					= new ModelValueBoolean("Show peaks", false);
+	private ModelValueBoolean						parameterShowPeaks					= new ModelValueBoolean("Show peaks", true);
 
 	private ModelValueBoolean 						parameterDebugDisplay				= new ModelValueBoolean("Debug", false);
 	
@@ -261,11 +263,11 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 
 		if (captureGIF) {
 //			parameterFrequency.setValue(new FrequencyRange(700, 2700));
-			parameterFrequency.setValue(new FrequencyRange(2400, 2700));
+			parameterFrequency.setValue(new FrequencyRange(lowFreq, highFreq));
 			parameterGainTotal.setValue(60);
 			parameterSpurRemoval.setValue(true);
 			parameterPersistentDisplay.setValue(true);
-			parameterFFTBinHz.setValue(500000);
+			parameterFFTBinHz.setValue(5000);
 			parameterFrequencyAllocationTable.setValue(new FrequencyAllocations().getTable().values().stream().findFirst().get());
 		}
 
