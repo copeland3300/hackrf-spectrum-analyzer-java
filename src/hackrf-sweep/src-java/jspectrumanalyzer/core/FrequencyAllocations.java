@@ -25,6 +25,7 @@ public class FrequencyAllocations {
 	private void loadEurope() {
 		loadTableFromCSV("Europe", getClass().getResourceAsStream("/resources/freq-europe.csv"));		
 		loadTableFromCSV("USA", getClass().getResourceAsStream("/resources/freq-usa.csv"));
+		loadTableFromCSV("Wifi", getClass().getResourceAsStream("/resources/freq-2400MHZ.csv"));
 	}
 	
 	private void loadTableFromCSV(String locationName, InputStream is) {
@@ -48,7 +49,15 @@ public class FrequencyAllocations {
 				lineNo++;
 				if (lineNo == 1)
 					continue;
+				if (line.startsWith("#"))
+					continue;
+
+				// String[] splitLine = line.split(";");
+				// for (String l : splitLine) {
+				// 	System.err.println(l);
+				// }
 				
+
 				Matcher m	= patternCSV.matcher(line);
 				if (m.find()) {
 					double multiplier	= m.group(3).equals("k") ? 1000 : 1000000;
@@ -56,7 +65,14 @@ public class FrequencyAllocations {
 					long stopFreq	= Math.round(Double.parseDouble(m.group(2)) * multiplier);
 					String name	= m.group(4);
 					String applications	= m.group(5);
+					
 					FrequencyBand band	= new FrequencyBand(startFreq, stopFreq, name, applications);
+					// System.out.println(multiplier);
+					// System.out.println(startFreq);
+					// System.out.println(stopFreq);
+					// System.out.println(name);
+					// System.out.println(applications);
+					// System.out.println(band);
 					bands.add(band);
 				}
 			}

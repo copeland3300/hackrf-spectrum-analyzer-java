@@ -204,8 +204,8 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 	/**
 	 * Capture a GIF of the program for the GITHUB page
 	 */
-	private int										lowFreq								= 2400;
-	private int 									highFreq							= 2500;
+	private int										lowFreq								= 2370;
+	private int 									highFreq							= 2530;
 	private ScreenCapture							gifCap								= null;
 	private ArrayList<HackRFEventListener>			hRFlisteners							= new ArrayList<>();
 	private ArrayBlockingQueue<FFTBins>				hwProcessingQueue						= new ArrayBlockingQueue<>(

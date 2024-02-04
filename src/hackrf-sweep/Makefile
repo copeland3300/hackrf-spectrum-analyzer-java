@@ -102,7 +102,7 @@ $(ZIP_FILE_PATH): $(DLL_LIB) $(DLL_LIB_WIN)
 .PHONY: patch_hackrf
 patch_hackrf:
 	# format the src # clang-format --style=file:../../../.clang-format -i hackrf_sweep.c
-	(cd lib/hackrf/ && git reset --hard v2023.01.1 && git apply < ../../src-c/0001-hackrf_sweep-to-library-conversion.patch)
+	#(cd lib/hackrf/ && git reset --hard v2023.01.1 && git apply < ../../src-c/0001-hackrf_sweep-to-library-conversion.patch)
 
 .PHONY: prepare
 prepare: dirs $(OBJECTS) $(OBJECTS_WIN) $(DLL_LIB_FFTW)
