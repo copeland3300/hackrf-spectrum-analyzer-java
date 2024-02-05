@@ -19,6 +19,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -204,8 +205,13 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 	/**
 	 * Capture a GIF of the program for the GITHUB page
 	 */
-	private int										lowFreq								= 2370;
-	private int 									highFreq							= 2530;
+	private String valuesPath = "values.txt";
+	private BufferedReader bufferedReader = null;
+	
+
+
+	private int										lowFreq								= 770;
+	private int 									highFreq							= 790;
 	private ScreenCapture							gifCap								= null;
 	private ArrayList<HackRFEventListener>			hRFlisteners							= new ArrayList<>();
 	private ArrayBlockingQueue<FFTBins>				hwProcessingQueue						= new ArrayBlockingQueue<>(
