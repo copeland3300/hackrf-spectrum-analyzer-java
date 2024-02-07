@@ -21,6 +21,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.Scanner; // Import the Scanner class to read text files
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -205,13 +207,28 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 	/**
 	 * Capture a GIF of the program for the GITHUB page
 	 */
-	private String valuesPath = "values.txt";
-	private BufferedReader bufferedReader = null;
+	int										lowFreq								= 100;
+	int 									highFreq							= 200;
+	// public class setFreqs() 
+	// {
+		// try {
+		// File myObj = new File("freq.csv");
+		// Scanner myReader = new Scanner(myObj);
+		// while (myReader.hasNextLine()) {
+		// String data = myReader.nextLine();
+		// System.out.println(data);
+		// String[] parts = data.split(",");
+		// lowFreq = Integer.parseInt(parts[0].trim()); // Trim to remove any leading or trailing spaces
+		// highFreq = Integer.parseInt(parts[1].trim());
+		// }
+		// myReader.close();
+		// } catch (FileNotFoundException e) {
+		// System.out.println("A file read error occurred.");
+		// e.printStackTrace();
+		// }
+	// }
 	
-
-
-	private int										lowFreq								= 770;
-	private int 									highFreq							= 790;
+	
 	private ScreenCapture							gifCap								= null;
 	private ArrayList<HackRFEventListener>			hRFlisteners							= new ArrayList<>();
 	private ArrayBlockingQueue<FFTBins>				hwProcessingQueue						= new ArrayBlockingQueue<>(
@@ -266,6 +283,10 @@ public class HackRFSweepSpectrumAnalyzer implements HackRFSettings, HackRFSweepD
 
 	public HackRFSweepSpectrumAnalyzer() {
 		printInit(0);
+		
+		System.err.println("starting");
+		System.err.println("Working Directory = " + System.getProperty("user.dir"));
+
 
 		if (captureGIF) {
 //			parameterFrequency.setValue(new FrequencyRange(700, 2700));
