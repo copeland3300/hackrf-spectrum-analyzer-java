@@ -51,7 +51,7 @@ LDPATHS_STATIC				= -L""
 
 #paths
 #path to build dlls
-OUTPUT_DLL_DIR	    		= $(OUTPUT_PATH)/lib/linux-x86-64
+OUTPUT_DLL_DIR	    		= $(OUTPUT_PATH)/lib/linux-aarch64
 OUTPUT_DLL_DIR_WIN	     	= $(OUTPUT_PATH)/lib/win32-x86-64
 
 # Windows build setup
@@ -70,7 +70,9 @@ ANT_PATH					= ""
 JDK_EXECUTABLE				= java #required to generate jna wrapper
 DLL_LIB						= $(OUTPUT_DLL_DIR)/libhackrf-sweep.so
 LDLIBS						= -lusb-1.0 -lfftw3 -lfftw3f
-CFLAGS						+= -march=x86-64
+#CFLAGS						+= -march=x86-64
+CFLAGS						+= -march=native
+CFLAGS_WIN					+= -march=x86-64
 LIB_DIR						= linux-x86-64
 
 JNAERATOR					= $(CURDIR)/lib/jnaerator/jnaerator-0.13-20150328.111636-4-shaded.jar
@@ -89,10 +91,10 @@ dirs:
 	@mkdir -p $(dir $(OBJECTS))
 
 $(MAIN_JAR):
-	echo "running ant..."
+	@echo "running ant..."
 	ant -buildfile lib/hackrf_sweep_spectral_analyzer_buildjar_ant.xml compile
 	ant -buildfile lib/hackrf_sweep_spectral_analyzer_buildjar_ant.xml create_run_jar
-	echo "running ant... done"
+	@echo "running ant... done"
 	
 $(ZIP_FILE_PATH): $(DLL_LIB) $(DLL_LIB_WIN)
 	mkdir -p $(RELEASE_DIR)
@@ -102,7 +104,7 @@ $(ZIP_FILE_PATH): $(DLL_LIB) $(DLL_LIB_WIN)
 .PHONY: patch_hackrf
 patch_hackrf:
 	# format the src # clang-format --style=file:../../../.clang-format -i hackrf_sweep.c
-	#(cd lib/hackrf/ && git reset --hard v2023.01.1 && git apply < ../../src-c/0001-hackrf_sweep-to-library-conversion.patch)
+	(cd lib/hackrf/ && git reset --hard v2023.01.1 && git apply < ../../src-c/0001-hackrf_sweep-to-library-conversion.patch)
 
 .PHONY: prepare
 prepare: dirs $(OBJECTS) $(OBJECTS_WIN) $(DLL_LIB_FFTW)
@@ -123,16 +125,16 @@ jnabridge: $(JNA_SWEEP_HEADER)
 	rm -rf $(CURDIR)/_jnaerator.*
 
 $(DLL_LIB_WIN): $(OBJECTS_WIN) 
-	echo "---- Building windows version [start] ----"	
+	@echo "---- Building windows version [start] ----"	
 	$(CXX_WIN) $(LDFLAGS_WIN)   $(LDPATHS_WIN)  $(OBJECTS_WIN)  -o $(DLL_LIB_WIN) $(LDLIBS_WIN)
 	x86_64-w64-mingw32-strip --strip-unneeded $(DLL_LIB_WIN)
-	echo "---- Building windows version [done ] ----"	
+	@echo "---- Building windows version [done ] ----"	
 	
 $(DLL_LIB):  $(OBJECTS)
-	echo "---- Building linux version [start] ----"	
+	@echo "---- Building linux version [start] ----"	
 	$(CXX) $(LDFLAGS) $(LDPATHS) $(OBJECTS) -o $(DLL_LIB) $(LDLIBS)
 	strip --strip-unneeded $(DLL_LIB)
-	echo "---- Building linux version [done ] ----"
+	@echo "---- Building linux version [done ] ----"
 
 $(BUILD_PATH)/%.c.$(OBJECT_SUFFIX): %.c
 	$(CC) $(CFLAGS) $(INCLUDE_PATHS)  $< -o $@
